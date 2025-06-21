@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "stage.h"
+#include "PlayScene.h"
 
 Player::Player()
 {
@@ -21,6 +22,15 @@ Player::Player(VECTOR3 pos)
 	animator->SetModel(mesh);
 	mesh->LoadAnimation(0, "data/Mousey/Anim_Run.anmx", true);
 	animator->Play(0);
+
+	MATRIX4X4 mat = XMMatrixRotationY(
+		transform.rotation.y);
+
+	VECTOR3 comPos = transform.position + VECTOR3(2, 4, -4) * mat;
+	VECTOR3 camLook = transform.position + VECTOR3(0, 2, 0) * mat;  // Look‚Í‚˜‚Æ‚š‚ª‚O‚¾‚©‚ç‰ñ“]i–matj‚µ‚Ä‚à•Ï‚í‚ç‚È‚¢ (1, 2, 0)‚É‚·‚é‚ÆŽ‹“_‚ªŽÎ‚ßŒã‚ë‚É‚È‚é
+
+	GameDevice()->m_mView = XMMatrixLookAtLH(
+		comPos, camLook, VECTOR3(0, 1, 0));
 }
 
 Player::~Player()
@@ -30,6 +40,14 @@ Player::~Player()
 void Player::Update()
 {
 	animator->Update();
+
+	PlayScene* scene =
+				dynamic_cast<PlayScene*>(SceneManager::CurrentScene());
+
+	if (!scene->CanMove()) { // “®‚¯‚È‚¢‚Ì‚Å
+		return;
+	}
+
 	CDirectInput* di = GameDevice()->m_pDI;
 	if (di->CheckKey(KD_DAT, DIK_D))
 	{
@@ -67,7 +85,6 @@ void Player::Update()
 
 	}
 
-
 	MATRIX4X4 mat = XMMatrixRotationY(
 		transform.rotation.y);
 
@@ -76,6 +93,4 @@ void Player::Update()
 
 	GameDevice()->m_mView = XMMatrixLookAtLH(
 		comPos, camLook, VECTOR3(0, 1, 0));
-
-
 }
