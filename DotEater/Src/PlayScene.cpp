@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "Stage.h"
 #include "ReadyGo.h"
-
+#include "PlayTime.h"
 
 PlayScene::PlayScene()
 {
@@ -14,10 +14,10 @@ PlayScene::PlayScene()
 		VECTOR3(0, 1, 0)); // カメラの向き カメラの見てる場所 カメラの位置
 
 //  new Player(VECTOR3(1, 0, -1));
-	new Stage();
+	new Stage(0);
 
 	new ReadyGo();
-
+	new PlayTime();
 	state = State::S_Ready;
 }
 

@@ -25,9 +25,9 @@ ReadyGo::~ReadyGo()
 void ReadyGo::Update()
 {
 	readyCounter++;
-	if (readyCounter <= 120) { // ready‚¾‚¯“®‚©‚·‚Ì‚Å
-		float rate = readyCounter / 120.0f;
-		rate = easeOutBounce(rate);
+	if (readyCounter <= 30) { // ready‚¾‚¯“®‚©‚·‚Ì‚Å
+		float rate = readyCounter / 30.0f;
+//		rate = easeOutBounce(rate);
 		position = Lerp<VECTOR2>(start, stop, rate);
 	}
 	if (readyCounter == 120) {
@@ -46,11 +46,11 @@ void ReadyGo::Draw()
 		CSprite spr;
 		int x = readyImage->m_dwImageWidth;
 		int y = readyImage->m_dwImageHeight;
-		spr.Draw(readyImage, position.x, position.y, 0, 0, x, y);
+		spr.Draw(readyImage, position.x - x/2, position.y - y/2, 0, 0, x, y);
 	} else {
 		CSprite spr;
 		int x = goImage->m_dwImageWidth;
 		int y = goImage->m_dwImageHeight;
-		spr.Draw(goImage, position.x, position.y, 0, 0, x, y);
+		spr.Draw(goImage, position.x - x/2, position.y - y/2, 0, 0, x, y);
 	}
 }

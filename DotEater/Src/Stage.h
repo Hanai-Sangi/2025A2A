@@ -5,6 +5,7 @@ class Stage : public Object3D
 {
 public:
 	Stage();
+	Stage(int stageNo);
 	~Stage();
 	void Update()override;
 	void Draw()override;

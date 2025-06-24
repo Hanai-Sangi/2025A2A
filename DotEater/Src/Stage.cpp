@@ -2,18 +2,20 @@
 #include <vector>
 #include "Player.h"
 #include "Coin.h"
+#include "CsvReader.h"
 
-std::vector<std::vector<int>> map = {  
-	{ 1, 1, 2, 1 },  //map[0].size()
-	{ 1, 3, 3, 1 },  //map[1]
-	{ 1, 1, 1, 1 },  //map[2]
+//std::vector<std::vector<int>> map = {  
+//	{ 1, 1, 2, 1 },  //map[0].size()
+//	{ 1, 3, 3, 1 },  //map[1]
+//	{ 1, 1, 1, 1 },  //map[2]
+//};
+std::vector<std::vector<int>> map;
 
-	// std::vector は配列 
-	// map の中に std::vector が入ってて その中に int が入ってる
-};
+Stage::Stage() : Stage(0)
+{
+}
 
-
-Stage::Stage()
+Stage::Stage(int stageNo)
 {
 	mesh = new CFbxMesh();
 	mesh->Load("data/LowPoly/WallStone.mesh");	
@@ -21,8 +23,20 @@ Stage::Stage()
 	meshCol = new MeshCollider();
 	meshCol->MakeFromMesh(mesh);// 当たり判定用のモデルデータ
 
-	// map [][] が２になっていれば、そこにnew Playerする
+	// csvからmapを作る
+	char filename[30];
+	sprintf_s<30>(filename, "data/Stage%02d.csv", stageNo);
+	CsvReader* csv = new CsvReader(filename);
+	map.resize(csv->GetLines());
+	for (int z = 0; z < csv->GetLines(); z++) {
+		map[z].resize(csv->GetColumns(z));
+		for (int x = 0; x < csv->GetColumns(z); x++) {
+			map[z][x] = csv->GetInt(z, x);
+		}
+	}
+	delete csv;
 
+	// map [][] が２になっていれば、そこにnew Playerする
 	for (int z = 0; z < map.size(); z++)  //sizeof(int)にするとshortにしたり型変えると困る
 	{
 		for (int x = 0; x < map[z].size(); x++)
@@ -38,8 +52,6 @@ Stage::Stage()
 			}
 		}
 	}
-
-
 }
 
 Stage::~Stage()
