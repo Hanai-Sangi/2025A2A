@@ -276,6 +276,12 @@
     <ClInclude Include="Src\Animator.h">
       <Filter>ソース ファイル\02_ゲームライブラリ</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Field.h">
+      <Filter>ソース ファイル\08_PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Player.h">
+      <Filter>ソース ファイル\08_PlayScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp">
@@ -370,6 +376,12 @@
     </ClCompile>
     <ClCompile Include="Src\Animator.cpp">
       <Filter>ソース ファイル\02_ゲームライブラリ</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Player.cpp">
+      <Filter>ソース ファイル\08_PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Field.cpp">
+      <Filter>ソース ファイル\08_PlayScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
