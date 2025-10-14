@@ -282,6 +282,9 @@
     <ClInclude Include="Src\Player.h">
       <Filter>ソース ファイル\08_PlayScene</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Camera.h">
+      <Filter>ソース ファイル\08_PlayScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp">
@@ -382,6 +385,9 @@
     </ClCompile>
     <ClCompile Include="Src\Field.cpp">
       <Filter>ソース ファイル\08_PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Camera.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

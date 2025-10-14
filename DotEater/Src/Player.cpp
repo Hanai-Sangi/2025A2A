@@ -26,7 +26,15 @@ Player::Player(VECTOR3 pos)
 	MATRIX4X4 mat = XMMatrixRotationY(
 		transform.rotation.y);
 
-	VECTOR3 comPos = transform.position + VECTOR3(2, 4, -4) * mat;
+	VECTOR3 comPos = transform.position 
+					+ VECTOR3(2, 4, -4) * mat;
+
+
+
+
+
+
+
 	VECTOR3 camLook = transform.position + VECTOR3(0, 2, 0) * mat;  // Look‚Í‚˜‚Æ‚š‚ª‚O‚¾‚©‚ç‰ñ“]i–matj‚µ‚Ä‚à•Ï‚í‚ç‚È‚¢ (1, 2, 0)‚É‚·‚é‚ÆŽ‹“_‚ªŽÎ‚ßŒã‚ë‚É‚È‚é
 
 	GameDevice()->m_mView = XMMatrixLookAtLH(

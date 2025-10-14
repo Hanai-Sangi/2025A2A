@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../Libs/Imgui/imgui.h"
 
 Player::Player()
 {
@@ -16,5 +17,15 @@ Player::~Player()
 
 void Player::Update()
 {
+	auto inp = GameDevice()->m_pDI->GetJoyState();
+	int x = inp.lRx;
+	int y = inp.lRy;
+	int b = inp.rgbButtons[0];
+	ImGui::Begin("Pad");
+	ImGui::InputInt("RX", &x);
+	ImGui::InputInt("RY", &y);
+	ImGui::InputInt("BTN", &b);
+	ImGui::End();
+
 	animator->Update();
 }
