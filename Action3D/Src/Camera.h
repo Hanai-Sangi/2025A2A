@@ -9,4 +9,5 @@ public:
 	void Update() override;
 private:
 	float RStickX();
+	float RStickY();
 };
