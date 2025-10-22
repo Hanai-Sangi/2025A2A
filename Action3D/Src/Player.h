@@ -7,4 +7,6 @@ public:
 	Player();
 	~Player();
 	void Update() override;
+private:
+	VECTOR2 LStickVec();
 };
