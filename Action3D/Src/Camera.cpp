@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "Player.h"
 
 const VECTOR3 EyeBase = VECTOR3(0, 0, -5.2f);
 const float AngleBase = 30.0f * DegToRad;
@@ -38,9 +39,11 @@ void Camera::Update()
 	MATRIX4X4 matX = XMMatrixRotationX(
 		transform.rotation.x);
 
+	Player* pl = ObjectManager::FindGameObject<Player>();
+	VECTOR3 plPos = pl->GetTransform().position;
 	VECTOR3 eye = EyeBase * matX * matY 
-			+ VECTOR3(0, 1.5f, 0);
-	VECTOR3 look = VECTOR3(0, 2, 0);
+			+ VECTOR3(0, 1.5f, 0) + plPos;
+	VECTOR3 look = VECTOR3(0, 2, 0) + plPos;
 	GameDevice()->m_vEyePt = eye; // カメラ座標
 	GameDevice()->m_vLookatPt = look; // 注視点
 	GameDevice()->m_mView = XMMatrixLookAtLH(     // ビューマトリックス

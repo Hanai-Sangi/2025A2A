@@ -1,14 +1,24 @@
 #include "Player.h"
 #include "../Libs/Imgui/imgui.h"
 
-Player::Player()
+enum ANIM_ID {
+	A_RUN = 0,
+	A_WAIT,
+	A_ATTACK1,
+	A_ATTACK2,
+	A_ATTACK3,
+};
+	Player::Player()
 {
 	mesh = new CFbxMesh();
 	mesh->Load("Data/Player/PlayerChara.mesh");
-	mesh->LoadAnimation(0, "Data/Player/Run.anmx", true);
+	mesh->LoadAnimation(A_RUN, "Data/Player/Run.anmx", true);
+	mesh->LoadAnimation(A_ATTACK1, "Data/Player/attack1.anmx", false);
+	mesh->LoadAnimation(A_ATTACK2, "Data/Player/attack2.anmx", false);
+	mesh->LoadAnimation(A_ATTACK3, "Data/Player/attack3.anmx", false);
 	animator = new Animator();
 	animator->SetModel(mesh);
-	animator->Play(0);
+	animator->Play(A_RUN);
 }
 
 Player::~Player()
@@ -36,12 +46,39 @@ void Player::Update()
 	VECTOR3 velocity = VECTOR3(stick.x, 0, -stick.y);
 	if (magnitude(velocity) > 0) {
 		velocity = velocity * XMMatrixRotationY(camAng);
-		transform.rotation.y = atan2f(velocity.x, velocity.z);
-		transform.position += velocity * 0.05f;
-	}
+#if false // 角度バージョン
+		float ang = atan2f(velocity.x, velocity.z);
+		float diff = ang - transform.rotation.y;
+		while (diff < -180.0f * DegToRad) diff += 360.0f * DegToRad;
+		while (diff > 180.0f * DegToRad) diff -= 360.0f * DegToRad;
+		if (diff >= -30.0f * DegToRad && diff <= 30.0f * DegToRad) {
+			transform.rotation.y = ang;
+		}else if (diff>0)
+			transform.rotation.y += 30.0f * DegToRad;
+		else if (diff<0)
+			transform.rotation.y -= 30.0f * DegToRad;
+#else // 内積バージョン
+		XMMATRIX mat = XMMatrixRotationY(transform.rotation.y);
+		VECTOR3 foward = VECTOR3(0, 0, 1) * mat; // 正面
+		VECTOR3 velNorm = normalize(velocity); // 長さ１にする
+		float ip = dot(foward, velNorm); // forwardとvelNormで内積を取るとcosθが求まる
+		if(ip>cos(30.0f*DegToRad)) {
+			transform.rotation.y = atan2(velocity.x, velocity.z);// 入力方向を向く(atan2で求める
+		} else {
+			VECTOR3 right = VECTOR3(1, 0, 0) * mat; // 右
+			float ip = dot(right, velocity); // 内積を取る
+			if (ip > 0) {
+				transform.rotation.y += 30.0f * DegToRad;
+			} else {
+				transform.rotation.y -= 30.0f * DegToRad;
+			}
+		}
+#endif
+		transform.position += velocity * 0.5f;
+	} 
 	//メモ
 	XMMATRIX mat = XMMatrixRotationY(transform.rotation.y);
-	VECTOR3 front = VECTOR3(0, 0, 1) * mat; // 正面
+	VECTOR3 foward = VECTOR3(0, 0, 1) * mat; // 正面
 	VECTOR3 right = VECTOR3(1, 0, 0) * mat; // 右
 	VECTOR3 up = VECTOR3(0, 1, 0) * mat; // 上
 }
