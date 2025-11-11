@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "../Libs/Imgui/imgui.h"
+#include "Golem.h"
 
 enum ANIM_ID {
 	A_RUN = 0,
@@ -13,6 +14,7 @@ enum ANIM_ID {
 	mesh = new CFbxMesh();
 	mesh->Load("Data/Player/PlayerChara.mesh");
 	mesh->LoadAnimation(A_RUN, "Data/Player/Run.anmx", true);
+	mesh->LoadAnimation(A_WAIT, "Data/Player/Idle.anmx", true);
 	mesh->LoadAnimation(A_ATTACK1, "Data/Player/attack1.anmx", false);
 	mesh->LoadAnimation(A_ATTACK2, "Data/Player/attack2.anmx", false);
 	mesh->LoadAnimation(A_ATTACK3, "Data/Player/attack3.anmx", false);
@@ -28,18 +30,10 @@ Player::~Player()
 void Player::Update()
 {
 	switch (state) {
-	case ST_NORMAL:
-		UpdateNormal();
-		break;
-	case ST_ATT1:
-		UpdateAttack1();
-		break;
-	case ST_ATT2:
-		UpdateAttack2();
-		break;
-	case ST_ATT3:
-		UpdateAttack3();
-		break;
+	case ST_NORMAL:		UpdateNormal();		break;
+	case ST_ATT1:		UpdateAttack1();	break;
+	case ST_ATT2:		UpdateAttack2();	break;
+	case ST_ATT3:		UpdateAttack3();	break;
 	}
 	//auto inp = GameDevice()->m_pDI->GetJoyState();
 	//int x = inp.lRx;
@@ -51,6 +45,15 @@ void Player::Update()
 	//ImGui::InputInt("BTN", &b);
 	//ImGui::End();
 	animator->Update();
+}
+
+void Player::Draw()
+{
+	Object3D::Draw();
+	CSprite spr;
+	spr.DrawLine3D(VECTOR3(0,0,0), VECTOR3(0,5,0),
+		0xffffffff);
+
 }
 
 VECTOR2 Player::LStickVec()
@@ -116,7 +119,14 @@ void Player::UpdateNormal()
 			}
 		}
 #endif
-		transform.position += velocity * 0.5f;
+		transform.position += velocity * 0.2f;
+		Golem* gom = ObjectManager::FindGameObject<Golem>();
+		transform.position += gom->CollideSphere(
+					transform.position + VECTOR3(0,0.5,0), 0.5);
+					//	足元の50cm上を中心に、半径50cm
+		animator->Play(A_RUN);
+	} else {
+		animator->Play(A_WAIT);
 	}
 	//メモ
 	XMMATRIX mat = XMMatrixRotationY(transform.rotation.y);
@@ -125,13 +135,59 @@ void Player::UpdateNormal()
 	VECTOR3 up = VECTOR3(0, 1, 0) * mat; // 上
 
 	if (GameDevice()->m_pDI->CheckKey(KD_TRG, DIK_M)) {
-		animator->Play(A_ATTACK1);
+		animator->MergePlay(A_ATTACK1);
 		state = ST_ATT1;
+		attackPushed = false;
 	}
 }
 
 void Player::UpdateAttack1()
 {
+	if (animator->CurrentFrame() < 70.0f) {
+		animator->SetPlaySpeed(2.0f);
+	} else {
+		animator->SetPlaySpeed(1.2f);
+	}
+	// 70フレームまでに攻撃ボタンを押したら{
+	if (animator->CurrentFrame() < 70.0f) {
+		if (GameDevice()->m_pDI->CheckKey(KD_TRG, DIK_M)) {
+			attackPushed = true;
+		}
+	} else {
+		if (attackPushed) {
+			animator->Play(A_ATTACK2);
+			state = ST_ATT2;
+			attackPushed = false;
+		}
+	}
+
+	if (animator->Finished())
+	{
+		animator->MergePlay(A_RUN);
+		state = ST_NORMAL;
+	}
+}
+
+void Player::UpdateAttack2()
+{
+	if (animator->CurrentFrame() < 70.0f) {
+		animator->SetPlaySpeed(2.0f);
+	} else {
+		animator->SetPlaySpeed(1.2f);
+	}
+	// 70フレームまでに攻撃ボタンを押したら{
+	if (animator->CurrentFrame() < 70.0f) {
+		if (GameDevice()->m_pDI->CheckKey(KD_TRG, DIK_M)) {
+			attackPushed = true;
+		}
+	} else {
+		if (attackPushed) {
+			animator->Play(A_ATTACK3);
+			state = ST_ATT3;
+			attackPushed = false;
+		}
+	}
+
 	if (animator->Finished())
 	{
 		animator->Play(A_RUN);
@@ -139,10 +195,11 @@ void Player::UpdateAttack1()
 	}
 }
 
-void Player::UpdateAttack2()
-{
-}
-
 void Player::UpdateAttack3()
 {
+	if (animator->Finished())
+	{
+		animator->Play(A_RUN);
+		state = ST_NORMAL;
+	}
 }

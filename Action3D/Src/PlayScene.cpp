@@ -5,12 +5,14 @@
 #include "Field.h"
 #include "Player.h"
 #include "Camera.h"
+#include "Golem.h"
 
 PlayScene::PlayScene()
 {
 	new Field();
 	new Player();
 	new Camera();
+	new Golem(VECTOR3(0, 0, 4), 0);
 }
 
 PlayScene::~PlayScene()

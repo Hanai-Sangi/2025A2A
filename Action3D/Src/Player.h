@@ -7,6 +7,7 @@ public:
 	Player();
 	~Player();
 	void Update() override;
+	void Draw() override;
 private:
 	VECTOR2 LStickVec();
 
@@ -21,4 +22,5 @@ private:
 	void UpdateAttack1();
 	void UpdateAttack2();
 	void UpdateAttack3();
+	bool attackPushed;
 };
