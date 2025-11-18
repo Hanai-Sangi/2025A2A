@@ -22,6 +22,7 @@ Golem::Golem(VECTOR3 pos, float rotY)
 	transform.position = pos;
 	transform.rotation = VECTOR3(0, rotY, 0);
 	transform.scale = VECTOR3(0.3, 0.3, 0.3);
+	teritoriCenter = pos;
 
 	action = ACT_STAND;
 	intent = INT_WALK;
@@ -62,6 +63,9 @@ void Golem::UpdateIntention()
 	case INT_ATTACK:
 		IntAttack();
 		break;
+	case INT_BACK:
+		IntBack();
+		break;
 	}
 }
 
@@ -73,6 +77,12 @@ void Golem::ChangeIntention(Intent inte)
 	{
 	case INT_ATTACK:
 		ChangeAction(ACT_CHASE);
+		break;
+	case INT_WALK:
+		ChangeAction(ACT_STAND);
+		break;
+	case INT_BACK:
+		ChangeAction(ACT_STAND);
 		break;
 	}
 	intent = inte;
@@ -87,10 +97,7 @@ bool Golem::InSight(VECTOR3 pos, float dist, float angle)
 
 	if (magnitude(v) > dist)
 		return false;
-	if (dot(vNorm, forward) > cosf(angle)) {
-		return true;
-	}
-	return false;
+	return (dot(vNorm, forward) > cosf(angle));
 }
 
 void Golem::IntWalk()
@@ -105,6 +112,46 @@ void Golem::IntWalk()
 
 void Golem::IntAttack()
 {
+	// 視野から外れたので、攻撃やめる
+	Player* pl = ObjectManager::FindGameObject<Player>();
+	VECTOR3 plPos = pl->GetTransform().position;
+	if (not InSight(plPos, 6.0f, 40 * DegToRad)) {
+		ChangeIntention(INT_BACK);
+	}
+
+	// テリトリーから外れたので、攻撃やめる
+	VECTOR3 v = transform.position - teritoriCenter;
+	if (magnitude(v) > 10.0f) {
+		ChangeIntention(INT_BACK);
+	}
+}
+
+void Golem::IntBack()
+{
+	animator->Play(A_WALK);
+	animator->SetPlaySpeed(1.0f);
+	//teritoriCenterに向かって移動
+	const float RotSpeed = 20 * DegToRad; // 回転の速さ
+	float& rotY = transform.rotation.y;
+
+//	Player* pl = ObjectManager::FindGameObject<Player>();
+//	VECTOR3 plPos = pl->GetTransform().position;
+	VECTOR3 v = teritoriCenter - transform.position;
+	VECTOR3 vNorm = normalize(v); // 向きだけ
+	MATRIX4X4 mat = XMMatrixRotationY(rotY);
+	VECTOR3 forward = VECTOR3(0, 0, 1) * mat;
+	if (dot(vNorm, forward) > cosf(RotSpeed)) {
+		rotY = atan2f(v.x, v.z);
+	} else {
+		VECTOR3 right = VECTOR3(1, 0, 0) * mat;
+		if (dot(right, v) > 0) {
+			rotY += RotSpeed;
+		} else {
+			rotY -= RotSpeed;
+		}
+	}
+	VECTOR3 move = VECTOR3(0, 0, 1) * XMMatrixRotationY(transform.rotation.y);
+	transform.position += move * 0.02f;
 }
 
 void Golem::UpdateAction()

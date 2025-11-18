@@ -20,11 +20,13 @@ private:
 	enum Intent {
 		INT_WALK = 0,
 		INT_ATTACK,
+		INT_BACK,
 	};
 	Intent intent;
 	void ChangeIntention(Intent inte);
 	void IntWalk();
 	void IntAttack();
+	void IntBack();
 
 	void UpdateAction();
 	enum Action {
@@ -40,4 +42,5 @@ private:
 
 	bool InSight(VECTOR3 pos, float dist, float angle);
 
+	VECTOR3 teritoriCenter;
 };
