@@ -37,4 +37,7 @@ private:
 	void ActChase();
 	void ActPunch();
 	void ActStand();
+
+	bool InSight(VECTOR3 pos, float dist, float angle);
+
 };

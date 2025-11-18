@@ -73,16 +73,35 @@ void Golem::ChangeIntention(Intent inte)
 	{
 	case INT_ATTACK:
 		ChangeAction(ACT_CHASE);
+		break;
 	}
 	intent = inte;
 }
 
+bool Golem::InSight(VECTOR3 pos, float dist, float angle)
+{
+	VECTOR3 v = pos - transform.position;
+	VECTOR3 vNorm = normalize(v);
+	MATRIX4X4 mat = XMMatrixRotationY(transform.rotation.y);
+	VECTOR3 forward = VECTOR3(0, 0, 1) * mat;
+
+	if (magnitude(v) > dist)
+		return false;
+	if (dot(vNorm, forward) > cosf(angle)) {
+		return true;
+	}
+	return false;
+}
+
 void Golem::IntWalk()
 {
-	if (Player‚ª‹–ì‚É“ü‚Á‚½j{
+	Player* pl = ObjectManager::FindGameObject<Player>();
+	VECTOR3 plPos = pl->GetTransform().position;
+	if (InSight(plPos, 5.0f, 30 * DegToRad)) {
 		ChangeIntention(INT_ATTACK);
 	}
 }
+
 
 void Golem::IntAttack()
 {
