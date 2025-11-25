@@ -152,6 +152,11 @@ void Golem::IntBack()
 	}
 	VECTOR3 move = VECTOR3(0, 0, 1) * XMMatrixRotationY(transform.rotation.y);
 	transform.position += move * 0.02f;
+
+	v = teritoriCenter - transform.position;
+	if (magnitude(v) < 1.0f) {
+		ChangeIntention(INT_WALK);
+	}
 }
 
 void Golem::UpdateAction()

@@ -51,9 +51,12 @@ void Player::Draw()
 {
 	Object3D::Draw();
 	CSprite spr;
-	spr.DrawLine3D(VECTOR3(0,0,0), VECTOR3(0,5,0),
-		0xffffffff);
-
+	MATRIX4X4 handMat = mesh->GetFrameMatrices(animator, 34);
+	MATRIX4X4 mat = handMat * transform.matrix();
+	VECTOR3 hand = VECTOR3(0,0,0) * mat;
+	const VECTOR3 top = VECTOR3(0.9966, 0.6536, 0.14);
+	VECTOR3 t = top * mat;
+	spr.DrawLine3D(hand, t,	0x0000ff);
 }
 
 VECTOR2 Player::LStickVec()
