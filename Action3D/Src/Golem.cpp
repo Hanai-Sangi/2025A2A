@@ -63,9 +63,10 @@ VECTOR3 Golem::CollideSphere(VECTOR3 center, float radius)
 
 bool Golem::CollideSword(VECTOR3 top, VECTOR3 btm)
 {
-	if (CollideSegmentToSphere(top, btm, transform.position + VECTOR3(0, 1, 0), 1))
+	if (CollideSegmentToSphere(top, btm, 
+				transform.position + VECTOR3(0, 1, 0), 1))
 	{
-		DestroyMe();
+		ChangeIntention(INT_DEAD);
 	}
 	return false;
 }
@@ -81,6 +82,9 @@ void Golem::UpdateIntention()
 		break;
 	case INT_BACK:
 		IntBack();
+		break;
+	case INT_DEAD:
+		IntDead();
 		break;
 	}
 }
@@ -99,6 +103,9 @@ void Golem::ChangeIntention(Intent inte)
 		break;
 	case INT_BACK:
 		ChangeAction(ACT_STAND);
+		break;
+	case INT_DEAD:
+		ChangeAction(ACT_DEAD);
 		break;
 	}
 	intent = inte;
@@ -175,6 +182,10 @@ void Golem::IntBack()
 	}
 }
 
+void Golem::IntDead()
+{
+}
+
 void Golem::UpdateAction()
 {
 	switch (action) {
@@ -186,6 +197,9 @@ void Golem::UpdateAction()
 		break;
 	case ACT_STAND:
 		ActStand();
+		break;
+	case ACT_DEAD:
+		ActDead();
 		break;
 	}
 }
@@ -206,6 +220,11 @@ void Golem::ChangeAction(Action act)
 		break;
 	case ACT_STAND:
 		animator->Play(A_IDLE);
+		animator->SetPlaySpeed(1.0f);
+		break;
+	case ACT_DEAD:
+		deadTimer = 0.0f;
+		animator->Play(A_DIE);
 		animator->SetPlaySpeed(1.0f);
 		break;
 	}
@@ -249,4 +268,21 @@ void Golem::ActPunch()
 
 void Golem::ActStand()
 {
+}
+
+void Golem::ActDead()
+{
+	float f = animator->CurrentFrame();
+	if (f >= 50.0f) {
+		animator->SetPlaySpeed(f / 50.0f);
+	}
+	if (animator->Finished()) {
+		deadTimer += 1.0f;
+		if (deadTimer > 30.0f) {
+			transform.position.y -= 0.01f;
+			if (transform.position.y < -1.0f) {
+				DestroyMe();
+			}
+		}
+	}
 }

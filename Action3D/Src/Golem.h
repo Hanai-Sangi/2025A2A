@@ -24,26 +24,32 @@ private:
 		INT_WALK = 0,
 		INT_ATTACK,
 		INT_BACK,
+		INT_DEAD,
 	};
 	Intent intent;
 	void ChangeIntention(Intent inte);
 	void IntWalk();
 	void IntAttack();
 	void IntBack();
+	void IntDead();
 
 	void UpdateAction();
 	enum Action {
 		ACT_CHASE = 0,
 		ACT_PUNCH,
 		ACT_STAND,
+		ACT_DEAD,
 	};
 	Action action;
 	void ChangeAction(Action act);
 	void ActChase();
 	void ActPunch();
 	void ActStand();
+	void ActDead();
 
 	bool InSight(VECTOR3 pos, float dist, float angle);
 
 	VECTOR3 teritoriCenter;
+
+	float deadTimer;
 };

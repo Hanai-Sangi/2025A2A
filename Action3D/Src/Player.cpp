@@ -126,9 +126,11 @@ void Player::UpdateNormal()
 #endif
 		transform.position += velocity * 0.2f;
 		Golem* gom = ObjectManager::FindGameObject<Golem>();
-		transform.position += gom->CollideSphere(
-					transform.position + VECTOR3(0,0.5,0), 0.5);
-					//	足元の50cm上を中心に、半径50cm
+		if (gom != nullptr) {
+			transform.position += gom->CollideSphere(
+				transform.position + VECTOR3(0, 0.5, 0), 0.5);
+			//	足元の50cm上を中心に、半径50cm
+		}
 		animator->Play(A_RUN);
 	} else {
 		animator->Play(A_WAIT);
@@ -148,26 +150,34 @@ void Player::UpdateNormal()
 
 void Player::UpdateAttack1()
 {
-	if (animator->CurrentFrame() < 70.0f) {
+	float f = animator->CurrentFrame();
+
+	if (f < 70.0f) {
 		animator->SetPlaySpeed(2.0f);
 	} else {
 		animator->SetPlaySpeed(1.2f);
 	}
 	// 70フレームまでに攻撃ボタンを押したら{
-	if (animator->CurrentFrame() < 70.0f) {
+	static const float AnimCancel = 70.0f;
+	if (f < AnimCancel) {
 		if (GameDevice()->m_pDI->CheckKey(KD_TRG, DIK_M)) {
 			attackPushed = true;
-		}
-		//Golemに剣を当てる判定
-		auto golems = ObjectManager::FindGameObjects<Golem>();
-		for (Golem* g : golems) {
-			g->CollideSword(swordTop, swordBtm);
 		}
 	} else {
 		if (attackPushed) {
 			animator->Play(A_ATTACK2);
 			state = ST_ATT2;
 			attackPushed = false;
+		}
+	}
+
+	//Golemに剣を当てる判定
+	static const float AttackBegin = 20.0f;
+	static const float AttackEnd = 70.0f;
+	if (f >= AttackBegin && f <= AttackEnd) {
+		auto golems = ObjectManager::FindGameObjects<Golem>();
+		for (Golem* g : golems) {
+			g->CollideSword(swordTop, swordBtm);
 		}
 	}
 
