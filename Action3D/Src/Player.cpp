@@ -57,6 +57,8 @@ void Player::Draw()
 	const VECTOR3 top = VECTOR3(0.9966, 0.6536, 0.14);
 	VECTOR3 t = top * mat;
 	spr.DrawLine3D(hand, t,	0x0000ff);
+	swordBtm = hand;
+	swordTop = t;
 }
 
 VECTOR2 Player::LStickVec()
@@ -155,6 +157,11 @@ void Player::UpdateAttack1()
 	if (animator->CurrentFrame() < 70.0f) {
 		if (GameDevice()->m_pDI->CheckKey(KD_TRG, DIK_M)) {
 			attackPushed = true;
+		}
+		//Golem‚ÉŒ•‚ð“–‚Ä‚é”»’è
+		auto golems = ObjectManager::FindGameObjects<Golem>();
+		for (Golem* g : golems) {
+			g->CollideSword(swordTop, swordBtm);
 		}
 	} else {
 		if (attackPushed) {

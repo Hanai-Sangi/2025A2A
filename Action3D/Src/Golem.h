@@ -7,6 +7,7 @@ public:
 	Golem(VECTOR3 pos, float rotY);
 	~Golem();
 	void Update() override;
+	void Draw() override;
 
 	/// <summary>
 	/// ‹…‚Æ“–‚½‚è”»’è‚·‚é
@@ -15,6 +16,8 @@ public:
 	/// <param name="radius">‹…‚Ì”¼Œa</param>
 	/// <returns>‰Ÿ‚µ•Ô‚·ƒxƒNƒgƒ‹</returns>
 	VECTOR3 CollideSphere(VECTOR3 center, float radius);
+
+	bool CollideSword(VECTOR3 top, VECTOR3 btm);
 private:
 	void UpdateIntention();
 	enum Intent {

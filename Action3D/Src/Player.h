@@ -9,6 +9,8 @@ public:
 	void Update() override;
 	void Draw() override;
 private:
+	VECTOR3 swordTop;
+	VECTOR3 swordBtm;
 	VECTOR2 LStickVec();
 
 	enum State {
