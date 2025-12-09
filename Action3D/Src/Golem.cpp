@@ -1,6 +1,7 @@
 #include "Golem.h"
 #include "Player.h"
 #include "MyLibrary.h"
+#include "EnemyManager.h"
 
 enum ANIM_ID {
 	A_IDLE = 0,
@@ -253,9 +254,14 @@ void Golem::ActChase()
 		}
 	}
 	VECTOR3 move = VECTOR3(0,0,1) * XMMatrixRotationY(transform.rotation.y);
-	transform.position += move * 0.05f;
 	if ((plPos - transform.position).Length() < 2.0f) { //‹ß‚Ã‚¢‚½
-		ChangeAction(ACT_PUNCH);
+		EnemyManager* man = 
+			ObjectManager::FindGameObject<EnemyManager>();
+		if (man->CanAttack(this)) {
+			ChangeAction(ACT_PUNCH);
+		}
+	} else {
+		transform.position += move * 0.05f;
 	}
 }
 

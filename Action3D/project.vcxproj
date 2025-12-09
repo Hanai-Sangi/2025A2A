@@ -528,6 +528,7 @@
     <ClInclude Include="Src\DInput.h" />
     <ClInclude Include="Src\Direct3D.h" />
     <ClInclude Include="Src\Displace.h" />
+    <ClInclude Include="Src\EnemyManager.h" />
     <ClInclude Include="Src\FbxMesh.h" />
     <ClInclude Include="Src\Field.h" />
     <ClInclude Include="Src\GameMain.h" />
@@ -569,6 +570,7 @@
     <ClCompile Include="Src\DInput.cpp" />
     <ClCompile Include="Src\Direct3D.cpp" />
     <ClCompile Include="Src\Displace.cpp" />
+    <ClCompile Include="Src\EnemyManager.cpp" />
     <ClCompile Include="Src\FbxMesh.cpp" />
     <ClCompile Include="Src\Field.cpp" />
     <ClCompile Include="Src\GameMain.cpp" />
