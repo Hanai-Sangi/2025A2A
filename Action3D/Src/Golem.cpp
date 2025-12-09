@@ -40,12 +40,30 @@ void Golem::Update()
 	animator->Update();
 	UpdateIntention();
 	UpdateAction();
+	// 他キャラとの当たり判定
+	if (intent != INT_DEAD) {
+		auto enemies = ObjectManager::FindGameObjects<Golem>();
+		for (Golem* e : enemies) {
+			// eと球の当たり判定
+			// 自分の座標transform.position
+			// 相手の座標e->GetTransform().position
+			VECTOR3 v = transform.position - e->GetTransform().position;
+			v.y = 0;
+			float len = v.Length();
+			if (len < 2.0f) {
+				//当たった
+				transform.position += normalize(v)*(2.0f-len);
+			}
+		}
+	}
+
 }
 
 void Golem::Draw()
 {
 	Object3D::Draw();
-	DrawSphere(transform.position+VECTOR3(0,1,0), 1.0f, RED);
+	DrawSphere(transform.position, SonicRadius, RED); //shougekiha
+	float f = animator->CurrentFrame();
 }
 
 VECTOR3 Golem::CollideSphere(VECTOR3 center, float radius)
@@ -110,6 +128,10 @@ void Golem::ChangeIntention(Intent inte)
 		break;
 	}
 	intent = inte;
+
+	// 順番待ちをキャンセル
+	EnemyManager* man = ObjectManager::FindGameObject<EnemyManager>();
+	man->CancelAttack(this);
 }
 
 bool Golem::InSight(VECTOR3 pos, float dist, float angle)
@@ -269,6 +291,20 @@ void Golem::ActPunch()
 {
 	if (animator->Finished()) {
 		ChangeAction(ACT_CHASE);
+	}
+	float f = animator->CurrentFrame();
+	if (f>30.0f) {
+		EnemyManager* man = ObjectManager::FindGameObject<EnemyManager>();
+		man->CancelAttack(this);
+	}
+	// 80～110フレームで衝撃波
+	if (f >= 80.0f && f <= 110.0f) {
+		Player* p = ObjectManager::FindGameObject<Player>();
+		float rate = (f - 80.0f) / (110.f - 80.0f);
+		SonicRadius = 4.0f * rate; //kokowo 0kara4.0he hirogeru
+		p->CollideCircle(transform.position, SonicRadius);
+	} else {
+		SonicRadius = 0.0f;
 	}
 }
 

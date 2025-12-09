@@ -8,6 +8,7 @@ public:
 	~Player();
 	void Update() override;
 	void Draw() override;
+	bool CollideCircle(VECTOR3 center, float radius);
 private:
 	VECTOR3 swordTop;
 	VECTOR3 swordBtm;
@@ -18,11 +19,13 @@ private:
 		ST_ATT1,
 		ST_ATT2,
 		ST_ATT3,
+		ST_DAMAGE,
 	};
 	State state; //ó‘Ô‚ğ‚Â•Ï”
 	void UpdateNormal();
 	void UpdateAttack1();
 	void UpdateAttack2();
 	void UpdateAttack3();
+	void UpdateDamage();
 	bool attackPushed;
 };

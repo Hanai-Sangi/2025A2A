@@ -52,4 +52,6 @@ private:
 	VECTOR3 teritoriCenter;
 
 	float deadTimer;
+
+	float SonicRadius; // shougekiha no hankei
 };

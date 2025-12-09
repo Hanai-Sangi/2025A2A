@@ -9,6 +9,7 @@ public:
 	EnemyManager();
 	~EnemyManager();
 	bool CanAttack(Golem* golem);
+	void CancelAttack(Golem* golem);
 private:
 	std::list<Golem*> waiting;
 };

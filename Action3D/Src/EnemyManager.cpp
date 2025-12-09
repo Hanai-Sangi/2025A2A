@@ -38,3 +38,8 @@ bool EnemyManager::CanAttack(Golem* golem)
 	// begin()は先頭のデータのアドレス
 	return *(waiting.begin()) == golem;
 }
+
+void EnemyManager::CancelAttack(Golem* golem)
+{
+	waiting.remove(golem); // リストから取り除く
+}

@@ -8,6 +8,7 @@ enum ANIM_ID {
 	A_ATTACK1,
 	A_ATTACK2,
 	A_ATTACK3,
+	A_DAMAGE,
 };
 	Player::Player()
 {
@@ -18,6 +19,7 @@ enum ANIM_ID {
 	mesh->LoadAnimation(A_ATTACK1, "Data/Player/attack1.anmx", false);
 	mesh->LoadAnimation(A_ATTACK2, "Data/Player/attack2.anmx", false);
 	mesh->LoadAnimation(A_ATTACK3, "Data/Player/attack3.anmx", false);
+	mesh->LoadAnimation(A_DAMAGE, "Data/Player/Damage.anmx", false);
 	animator = new Animator();
 	animator->SetModel(mesh);
 	animator->Play(A_RUN);
@@ -34,6 +36,7 @@ void Player::Update()
 	case ST_ATT1:		UpdateAttack1();	break;
 	case ST_ATT2:		UpdateAttack2();	break;
 	case ST_ATT3:		UpdateAttack3();	break;
+	case ST_DAMAGE:		UpdateDamage();		break;
 	}
 	//auto inp = GameDevice()->m_pDI->GetJoyState();
 	//int x = inp.lRx;
@@ -59,6 +62,23 @@ void Player::Draw()
 	spr.DrawLine3D(hand, t,	0x0000ff);
 	swordBtm = hand;
 	swordTop = t;
+}
+
+bool Player::CollideCircle(VECTOR3 center, float radius)
+{
+	if (state==ST_DAMAGE)
+		return false;
+
+	VECTOR3 v = center - transform.position;
+	if (v.y < 0.1f && v.y > -0.1f) { // takasa no sa de seigen
+		v.y = 0; // enchuu de aterutame
+		if (v.Length() < radius) {
+			animator->Play(A_DAMAGE);
+			state = ST_DAMAGE;
+			return true;
+		}
+	}
+	return false;
 }
 
 VECTOR2 Player::LStickVec()
@@ -219,6 +239,16 @@ void Player::UpdateAttack3()
 {
 	if (animator->Finished())
 	{
+		animator->Play(A_RUN);
+		state = ST_NORMAL;
+	}
+}
+
+void Player::UpdateDamage()
+{
+	//	アニメーションが終わったら、
+	//	待機に戻る
+	if (animator->Finished()) {
 		animator->Play(A_RUN);
 		state = ST_NORMAL;
 	}
