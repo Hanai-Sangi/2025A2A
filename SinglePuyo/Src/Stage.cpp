@@ -73,8 +73,8 @@ bool Stage::EraseCheck()
 	}
 	if (found) { // ‚Õ‚æ‚ğÁ‚µ‚½
 		// ‚Õ‚æ‚ğ—‚Æ‚·
-		for (int x = 0; x<WIDTH; x++) {
-
+		for (int x = 0; x < WIDTH; x++) {
+		}
 	}
 	return false;
 }
