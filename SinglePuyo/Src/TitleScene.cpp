@@ -1,8 +1,17 @@
 #include "TitleScene.h"
 #include "GameMain.h"
 
+int calc(int d)
+{
+	if (d >= 10) {
+		return 10;
+	}
+	return calc(d+1);
+}
+
 TitleScene::TitleScene()
 {
+	calc(0);
 }
 
 TitleScene::~TitleScene()

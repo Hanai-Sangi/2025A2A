@@ -53,4 +53,48 @@ bool Stage::CanMove(int x, int y)
 void Stage::Set(int x, int y, Puyo::Color c)
 {
 	cells[x][y].color = c;
+	EraseCheck();
+}
+
+bool Stage::EraseCheck()
+{
+	for (int x = 0; x < WIDTH; x++) {
+		for (int y = 0; y < HEIGHT; y++) {
+			Puyo::Color c = cells[x][y].color;
+			if (c == Puyo::C_NONE || c == Puyo::C_WALL)
+				continue;
+			if (ConnectCheck(x, y) >= 4) { // ‚±‚±‚©‚ç‚S•ûŒü’²‚×‚é
+				//‚Õ‚æ‚ğÁ‚·ichecked‚ªtrue‚Ì‚Õ‚æ‚Ì‚İj
+			}
+		}
+	}
+	return false;
+}
+
+int Stage::ConnectCheck(int x, int y)
+{
+	if (cells[x][y].checked)
+		return 0;
+
+	char test[256];
+	sprintf_s<256>(test, "Check %d %d\n", x, y);
+	OutputDebugString(test);
+
+	Puyo::Color c = cells[x][y].color;
+	cells[x][y].checked = true;
+
+	int count = 1; // ©•ª‚Ì•ª
+	if (cells[x + 1][y].color == c) { // ‰E
+		count += ConnectCheck(x + 1, y);
+	}
+	if (cells[x - 1][y].color == c) { // ¶
+		count += ConnectCheck(x - 1, y);
+	}
+	if (cells[x][y+1].color == c) { // ‰º
+		count += ConnectCheck(x, y+1);
+	}
+	if (cells[x][y-1].color == c) { // ã
+		count += ConnectCheck(x, y-1);
+	}
+	return count;
 }

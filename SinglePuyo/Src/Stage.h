@@ -24,10 +24,14 @@ public:
 
 	void Set(int x, int y, Puyo::Color c);
 private:
+	bool EraseCheck(); // Á‚¦‚é”»’è
+	int ConnectCheck(int x, int y);
+
 	CSpriteImage* image;
 	CSprite* spr;
 	struct Cell { // 1‚Â‚Ìƒ}ƒX‚Ìî•ñ
 		Puyo::Color color;
+		bool checked; // ’²‚×‚½
 	};
 	static const int WIDTH = 8;
 	static const int HEIGHT = 15;
