@@ -58,15 +58,23 @@ void Stage::Set(int x, int y, Puyo::Color c)
 
 bool Stage::EraseCheck()
 {
+	bool found = false;
 	for (int x = 0; x < WIDTH; x++) {
 		for (int y = 0; y < HEIGHT; y++) {
+			EraseBegin();
 			Puyo::Color c = cells[x][y].color;
 			if (c == Puyo::C_NONE || c == Puyo::C_WALL)
 				continue;
 			if (ConnectCheck(x, y) >= 4) { // ‚±‚±‚©‚ç‚S•ûŒü’²‚×‚é
-				//‚Õ‚æ‚ğÁ‚·ichecked‚ªtrue‚Ì‚Õ‚æ‚Ì‚İj
+				EraseChecked();
+				found = true;
 			}
 		}
+	}
+	if (found) { // ‚Õ‚æ‚ğÁ‚µ‚½
+		// ‚Õ‚æ‚ğ—‚Æ‚·
+		for (int x = 0; x<WIDTH; x++) {
+
 	}
 	return false;
 }
@@ -97,4 +105,24 @@ int Stage::ConnectCheck(int x, int y)
 		count += ConnectCheck(x, y-1);
 	}
 	return count;
+}
+
+void Stage::EraseChecked()
+{
+	for (int x = 0; x < WIDTH; x++) {
+		for (int y = 0; y < HEIGHT; y++) {
+			if (cells[x][y].checked) {
+				cells[x][y].color = Puyo::C_NONE;
+			}
+		}
+	}
+}
+
+void Stage::EraseBegin()
+{
+	for (int x = 0; x < WIDTH; x++) {
+		for (int y = 0; y < HEIGHT; y++) {
+			cells[x][y].checked = false;
+		}
+	}
 }

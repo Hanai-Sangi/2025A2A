@@ -26,7 +26,9 @@ void FallPuyo::Update()
 		}
 	}
 	if (di->CheckKey(KD_TRG, DIK_D)) {
-		x++;
+		if (st->CanMove(x + 1, y)) {
+			x++;
+		}
 	}
 	if (di->CheckKey(KD_DAT, DIK_S)) {
 		timer = 0.0f;

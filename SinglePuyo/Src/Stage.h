@@ -26,6 +26,8 @@ public:
 private:
 	bool EraseCheck(); // Á‚¦‚é”»’è
 	int ConnectCheck(int x, int y);
+	void EraseChecked();
+	void EraseBegin();
 
 	CSpriteImage* image;
 	CSprite* spr;
