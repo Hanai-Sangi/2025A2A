@@ -34,6 +34,7 @@ private:
 	struct Cell { // 1‚Â‚Ìƒ}ƒX‚Ìî•ñ
 		Puyo::Color color;
 		bool checked; // ’²‚×‚½
+		float dy; // Œ©‚½–Ú‚ÌY‚Ì•â³’l
 	};
 	static const int WIDTH = 8;
 	static const int HEIGHT = 15;

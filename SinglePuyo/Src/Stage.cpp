@@ -25,6 +25,16 @@ Stage::~Stage()
 
 void Stage::Update()
 {
+	for (int x = 0; x < WIDTH; x++) {
+		for (int y = 0; y < HEIGHT; y++) {
+			if (cells[x][y].dy > 0.0f) {
+				cells[x][y].dy -= 3.0f;
+				if (cells[x][y].dy < 0.0f) {
+					cells[x][y].dy = 0.0f;
+				}
+			}
+		}
+	}
 }
 
 void Stage::Draw()
@@ -34,7 +44,7 @@ void Stage::Draw()
 			int col = cells[x][y].color; // マスの色
 			if (col >= Puyo::C_RED) {
 				// 1つのマスの大きさは32x32
-				spr->Draw(image, x * 32 + 100, y * 32 + 100,
+				spr->Draw(image, x * 32 + 100, y * 32 + 100-cells[x][y].dy,
 					col * 32, 0, 32, 32);
 			}
 		}
@@ -53,6 +63,7 @@ bool Stage::CanMove(int x, int y)
 void Stage::Set(int x, int y, Puyo::Color c)
 {
 	cells[x][y].color = c;
+	cells[x][y].dy = 0;
 	EraseCheck();
 }
 
@@ -74,6 +85,19 @@ bool Stage::EraseCheck()
 	if (found) { // ぷよを消した
 		// ぷよを落とす
 		for (int x = 0; x < WIDTH; x++) {
+			int count = 0; // 消えたぷよの数
+			for (int y = HEIGHT - 1; y >= 0; y--) {
+				Puyo::Color c = cells[x][y].color;
+				if (c==Puyo::C_WALL)
+					continue;
+				if (c == Puyo::C_NONE) {
+					count++;
+				} else { // ぷよ
+					cells[x][y+count] = cells[x][y];
+					cells[x][y+count].dy = count*32;
+					cells[x][y].color = Puyo::C_NONE;
+				}
+			}
 		}
 	}
 	return false;
