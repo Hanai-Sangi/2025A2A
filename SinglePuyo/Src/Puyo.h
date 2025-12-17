@@ -2,12 +2,12 @@
 
 namespace Puyo {
 	enum Color {
-		C_NONE = -1,
+		C_NONE = -1, // ‚È‚µ
 		C_RED = 0,
 		C_GREEN,
 		C_BLUE,
 		C_YELLOW,
 		C_PURPLE,
-		C_WALL,
+		C_WALL, // •Ç
 	};
 };

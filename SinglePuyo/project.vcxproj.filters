@@ -282,6 +282,9 @@
     <ClInclude Include="Src\Puyo.h">
       <Filter>ソース ファイル\08_PlayScene</Filter>
     </ClInclude>
+    <ClInclude Include="Src\FallPuyo.h">
+      <Filter>ソース ファイル\08_PlayScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp">
@@ -378,6 +381,9 @@
       <Filter>ソース ファイル\02_ゲームライブラリ</Filter>
     </ClCompile>
     <ClCompile Include="Src\Stage.cpp">
+      <Filter>ソース ファイル\08_PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\FallPuyo.cpp">
       <Filter>ソース ファイル\08_PlayScene</Filter>
     </ClCompile>
   </ItemGroup>

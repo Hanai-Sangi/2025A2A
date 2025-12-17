@@ -3,10 +3,12 @@
 #include "CsvReader.h"
 #include <assert.h>
 #include "Stage.h"
+#include "FallPuyo.h"
 
 PlayScene::PlayScene()
 {
 	new Stage();
+	new FallPuyo();
 }
 
 PlayScene::~PlayScene()
