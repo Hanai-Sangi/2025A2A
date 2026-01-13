@@ -8,6 +8,7 @@ Stage::Stage()
 	for (int x = 0; x < WIDTH; x++) {
 		for (int y = 0; y < HEIGHT; y++) {
 			Puyo::Color c = Puyo::C_NONE;
+			cells[x][y].connect = 0;
 			if (y == HEIGHT - 1 || x == 0 || x == WIDTH - 1) {
 				c = Puyo::C_WALL;
 			}
@@ -51,7 +52,7 @@ void Stage::Draw()
 			if (col >= Puyo::C_RED) {
 				// 1つのマスの大きさは32x32
 				spr->Draw(image, x * 32 + 100, y * 32 + 100-cells[x][y].dy,
-					col * 32, 0, 32, 32);
+					col * 32, cells[x][y].connect * 32, 32, 32);
 			}
 		}
 	}
@@ -75,6 +76,23 @@ void Stage::Set(int x, int y, Puyo::Color c)
 
 bool Stage::EraseCheck()
 {
+	// 上下左右に同じものがあるかを見て、connectに代入する
+	for (int x = 1; x < WIDTH-1; x++) {
+		for (int y = 0; y < HEIGHT-1; y++) {
+			cells[x][y].connect = 0;
+			int c = cells[x][y].color;
+			if (c != Puyo::Color::C_NONE) {
+				if (cells[x - 1][y].color == c)
+					cells[x][y].connect += L;
+				if (cells[x + 1][y].color == c)
+					cells[x][y].connect += R;
+				if (cells[x][y+1].color == c)
+					cells[x][y].connect += D;
+				if (y > 0 && cells[x][y-1].color == c)
+					cells[x][y].connect += U;
+			}
+		}
+	}
 	bool found = false;
 	for (int x = 0; x < WIDTH; x++) {
 		for (int y = 0; y < HEIGHT; y++) {

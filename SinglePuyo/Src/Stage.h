@@ -31,8 +31,15 @@ private:
 
 	CSpriteImage* image;
 	CSprite* spr;
+	enum {
+		U = 1,
+		D = 2,
+		L = 4,
+		R = 8,
+	};
 	struct Cell { // 1つのマスの情報
 		Puyo::Color color;
+		int connect; // つながりを二進数で持つ
 		bool checked; // 調べた
 		float dy; // 見た目のYの補正値
 	};
