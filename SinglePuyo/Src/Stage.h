@@ -45,6 +45,5 @@ private:
 	// 盤面を初期化（壁を配置、１つだけPuyoを置く
 	// Stage::Stage()で初期化する
 
-	// 盤面のデータ通りに画面に表示する
-
+	float fallSpeed;
 };

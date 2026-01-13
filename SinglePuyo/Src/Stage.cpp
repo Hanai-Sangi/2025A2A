@@ -28,7 +28,7 @@ void Stage::Update()
 	for (int x = 0; x < WIDTH; x++) {
 		for (int y = 0; y < HEIGHT; y++) {
 			if (cells[x][y].dy > 0.0f) {
-				cells[x][y].dy -= 3.0f;
+				cells[x][y].dy -= fallSpeed;
 				if (cells[x][y].dy < 0.0f) {
 					cells[x][y].dy = 0.0f;
 				}
@@ -84,6 +84,7 @@ bool Stage::EraseCheck()
 	}
 	if (found) { // ‚Õ‚æ‚ðÁ‚µ‚½
 		// ‚Õ‚æ‚ð—Ž‚Æ‚·
+		fallSpeed = 3.0f;
 		for (int x = 0; x < WIDTH; x++) {
 			int count = 0; // Á‚¦‚½‚Õ‚æ‚Ì”
 			for (int y = HEIGHT - 1; y >= 0; y--) {
@@ -92,10 +93,12 @@ bool Stage::EraseCheck()
 					continue;
 				if (c == Puyo::C_NONE) {
 					count++;
-				} else { // ‚Õ‚æ
-					cells[x][y+count] = cells[x][y];
-					cells[x][y+count].dy = count*32;
-					cells[x][y].color = Puyo::C_NONE;
+				} else { // count‚ª>0‚È‚ç‚ÎA‚Õ‚æ‚ð—Ž‚Æ‚·
+					if (count > 0) {
+						cells[x][y + count] = cells[x][y];
+						cells[x][y + count].dy = count * 32;
+						cells[x][y].color = Puyo::C_NONE;
+					}
 				}
 			}
 		}
