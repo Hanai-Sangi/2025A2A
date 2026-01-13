@@ -25,15 +25,21 @@ Stage::~Stage()
 
 void Stage::Update()
 {
+	bool all0 = true;
 	for (int x = 0; x < WIDTH; x++) {
 		for (int y = 0; y < HEIGHT; y++) {
 			if (cells[x][y].dy > 0.0f) {
 				cells[x][y].dy -= fallSpeed;
-				if (cells[x][y].dy < 0.0f) {
-					cells[x][y].dy = 0.0f;
-				}
+				all0 = false;
+			} else if (cells[x][y].dy < 0.0f) {
+				cells[x][y].dy = 0.0f;
+				all0 = false;
 			}
 		}
+	}
+	fallSpeed += 2.3f;
+	if (all0) {
+		EraseCheck();
 	}
 }
 
@@ -84,7 +90,7 @@ bool Stage::EraseCheck()
 	}
 	if (found) { // ‚Õ‚æ‚ðÁ‚µ‚½
 		// ‚Õ‚æ‚ð—Ž‚Æ‚·
-		fallSpeed = 3.0f;
+		fallSpeed = 0.0f;
 		for (int x = 0; x < WIDTH; x++) {
 			int count = 0; // Á‚¦‚½‚Õ‚æ‚Ì”
 			for (int y = HEIGHT - 1; y >= 0; y--) {
